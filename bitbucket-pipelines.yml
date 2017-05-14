@@ -11,4 +11,13 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - pip install -r requirements-local.txt
           - make lint
-          - make test
+          - work-at-olist/manage.py migrate && make test
+
+definitions:
+  services:
+    postgres:
+      image: postgres
+      environment:
+        POSTGRES_DB: 'olist'
+        POSTGRES_USER: 'olist'
+        POSTGRES_PASSWORD: 'olist'
