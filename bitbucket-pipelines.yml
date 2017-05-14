@@ -9,6 +9,6 @@ pipelines:
   default:
     - step:
         script: # Modify the commands below to build your repository.
-          - pip install -r requirements.txt
+          - pip install -r requirements-local.txt
           - make lint
           - make test
