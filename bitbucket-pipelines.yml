@@ -11,7 +11,7 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - pip install -r requirements-local.txt
           - make lint
-          - work-at-olist/manage.py migrate && make test
+          - make test
 
 definitions:
   services:
