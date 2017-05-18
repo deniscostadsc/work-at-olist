@@ -1,9 +1,15 @@
 .DEFAULT: build
 
+build: lint test
+
 test:
-	python3 work-at-olist/manage.py test
+	cd work-at-olist; python3 manage.py test
 
 lint:
 	flake8 .
 
-build: lint test
+migrate:
+	cd work-at-olist; python3 manage.py migrate
+
+makemigrations:
+	cd work-at-olist; python3 manage.py makemigrations
