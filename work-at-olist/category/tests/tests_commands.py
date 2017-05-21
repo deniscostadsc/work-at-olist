@@ -33,6 +33,19 @@ class ImportCategories(TestCase):
         self.assertEquals(
             1, Channel.objects.filter(name='another-vendor').count())
 
+    def test_dont_create_channel_with_the_same_name(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/correct.csv',
+            stdout=self.out)
+        self.assertEquals(
+            1, Channel.objects.filter(name='supermarket').count())
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/correct.csv',
+            stdout=self.out)
+        self.assertEquals(
+            1, Channel.objects.filter(name='supermarket').count())
+        self.assertIn('supermarket already exist', self.out.getvalue())
+
     def test_save_category(self):
         call_command(
             'importcategories', 'supermarket', '../tests/files/correct.csv',
