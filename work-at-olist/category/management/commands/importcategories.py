@@ -14,17 +14,18 @@ class Command(BaseCommand):
         parser.add_argument('csv_file', nargs=1)
 
     def handle(self, *args, **options):
+        channel_name = options['channel_name'][0]
+        csv_file = options['csv_file'][0]
         try:
             with transaction.atomic():
-                channel = Channel.objects.create(
-                    name=options['channel_name'][0])
+                channel = Channel.objects.create(name=channel_name)
             self.stdout.write(self.style.SUCCESS('supermarket created.'))
         except IntegrityError:
             self.stdout.write(
                 self.style.WARNING('supermarket already exists.'))
-            channel = Channel.objects.get(name=options['channel_name'][0])
+            channel = Channel.objects.get(name=channel_name)
 
-        if not os.path.exists(options['csv_file'][0]):
+        if not os.path.exists(csv_file):
             self.stdout.write(
                 self.style.WARNING('csv file doesn\'t exist.'))
             return
@@ -32,7 +33,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             Category.objects.filter(channel=channel).delete()
 
-            with open(options['csv_file'][0], newline='') as csvfile:
+            with open(csv_file, newline='') as csvfile:
                 rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
                 categories_path = [row['category'] for row in rows]
                 categories_path.sort()
