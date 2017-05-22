@@ -11,3 +11,4 @@ class ChannelViewSet(viewsets.ModelViewSet):
     """
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
+    http_method_names = ['get']
