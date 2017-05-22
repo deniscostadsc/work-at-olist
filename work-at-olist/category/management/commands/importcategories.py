@@ -10,12 +10,20 @@ from category.models import Channel, Category
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument('channel_name', nargs=1)
-        parser.add_argument('csv_file', nargs=1)
+        parser.add_argument('channel_name', nargs=1, help='Channel name')
+        parser.add_argument('csv_file', nargs=1, help='Csv file path')
+        parser.add_argument(
+            '--csvdelimiter', nargs=1, type=str, default=',',
+            help='Change de csv delimiter. Default \',\'')
+        parser.add_argument(
+            '--quotechar', nargs=1, type=str, default='"',
+            help='Change the character that quote strings. Default \'"\'')
 
     def handle(self, *args, **options):
         channel_name = options['channel_name'][0]
         csv_file = options['csv_file'][0]
+        csv_delimiter = options['csvdelimiter'][0]
+        quotechar = options['quotechar'][0]
 
         channel = self._get_or_create(channel_name)
 
@@ -24,7 +32,9 @@ class Command(BaseCommand):
             return
 
         with open(csv_file, newline='') as csvfile:
-            rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
+            rows = csv.DictReader(
+                csvfile, delimiter=csv_delimiter, quotechar=quotechar)
+
             if 'category' not in rows.fieldnames:
                 self.stdout.write(self.style.ERROR(
                     'csv file has no category column.'))

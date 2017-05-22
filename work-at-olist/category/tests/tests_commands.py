@@ -58,6 +58,19 @@ class ImportCategories(TestCase):
             stdout=self.out)
         self.assertIn('csv file doesn\'t exist', self.out.getvalue())
 
+    def test_import_with_semocolon_sepated_value_file(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/semicolon.csv',
+            '--csvdelimiter', ';', stdout=self.out)
+        self.assertIn('Categories imported', self.out.getvalue())
+
+    def test_import_with_another_quotechar(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/pipe.csv',
+            '--quotechar', '|', stdout=self.out)
+        self.assertIn(',Bo,oks', self.out.getvalue())
+        self.assertIn('Categories imported', self.out.getvalue())
+
     def test_create_categories_from_csv(self):
         call_command(
             'importcategories', 'supermarket', '../tests/files/simple.csv',
