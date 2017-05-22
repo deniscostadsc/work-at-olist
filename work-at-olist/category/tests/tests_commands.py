@@ -111,3 +111,9 @@ class ImportCategories(TestCase):
         self.assertIsNone(books.parent)
         self.assertIsNone(games.parent)
         self.assertIsNone(computers.parent)
+
+    def test_csv_without_category_column(self):
+        call_command(
+            'importcategories', 'supermarket',
+            '../tests/files/no_category.csv', stdout=self.out)
+        self.assertIn('csv file has no category column', self.out.getvalue())

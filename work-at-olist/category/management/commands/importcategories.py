@@ -35,7 +35,13 @@ class Command(BaseCommand):
 
             with open(csv_file, newline='') as csvfile:
                 rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
-                categories_path = [row['category'] for row in rows]
+                try:
+                    categories_path = [row['category'] for row in rows]
+                except KeyError:
+                    self.stdout.write(self.style.ERROR(
+                        'csv file has no category column.'))
+                    return
+
                 categories_path.sort()
 
                 category = None
