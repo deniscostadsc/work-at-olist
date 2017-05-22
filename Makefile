@@ -1,6 +1,6 @@
 .DEFAULT: build
 
-build: lint test
+build: lint test coverage
 
 test:
 	cd work-at-olist; coverage run --source='.' manage.py test
