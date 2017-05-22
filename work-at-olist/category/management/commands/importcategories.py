@@ -16,6 +16,30 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         channel_name = options['channel_name'][0]
         csv_file = options['csv_file'][0]
+
+        channel = self._get_or_create(channel_name)
+
+        if not self._csv_file_exists(csv_file):
+            self.stdout.write(self.style.ERROR('csv file doesn\'t exist.'))
+            return
+
+        with open(csv_file, newline='') as csvfile:
+            rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
+            if 'category' not in rows.fieldnames:
+                self.stdout.write(self.style.ERROR(
+                    'csv file has no category column.'))
+                return
+
+            categories_path = [row['category'] for row in rows]
+
+        self._flush_and_create_categories(channel, categories_path)
+
+        self.stdout.write(self.style.SUCCESS('Categories imported.'))
+
+    def _csv_file_exists(self, csvfile):
+        return os.path.exists(csvfile)
+
+    def _get_or_create(self, channel_name):
         try:
             with transaction.atomic():
                 channel = Channel.objects.create(name=channel_name)
@@ -25,34 +49,22 @@ class Command(BaseCommand):
                 self.style.WARNING('supermarket already exists.'))
             channel = Channel.objects.get(name=channel_name)
 
-        if not os.path.exists(csv_file):
-            self.stdout.write(self.style.ERROR('csv file doesn\'t exist.'))
-            return
+        return channel
 
+    def _flush_and_create_categories(self, channel, categories_path):
         with transaction.atomic():
             Category.objects.filter(channel=channel).delete()
 
-            with open(csv_file, newline='') as csvfile:
-                rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
-                try:
-                    categories_path = [row['category'] for row in rows]
-                except KeyError:
-                    self.stdout.write(self.style.ERROR(
-                        'csv file has no category column.'))
-                    return
+            categories_path.sort()
 
-                categories_path.sort()
+            category = None
+            for category_path in categories_path:
+                category_path = category_path.split(' / ')
 
-                category = None
-                for category_path in categories_path:
-                    category_path = category_path.split(' / ')
+                if len(category_path) == 1:
+                    category = None
 
-                    if len(category_path) == 1:
-                        category = None
-
-                    category_name = category_path[-1]
-                    category = Category.objects.create(
-                        name=category_name, channel=channel, parent=category)
-                    self.stdout.write(self.style.SUCCESS(category_name))
-
-        self.stdout.write(self.style.SUCCESS('Categories imported.'))
+                category_name = category_path[-1]
+                category = Category.objects.create(
+                    name=category_name, channel=channel, parent=category)
+                self.stdout.write(self.style.SUCCESS(category_name))
