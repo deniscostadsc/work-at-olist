@@ -9,6 +9,9 @@ class Channel(models.Model):
     name = models.CharField(max_length=40, unique=True)
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
 
+    def __str__(self):
+        return self.name
+
 
 class Category(MPTTModel):
     name = models.CharField(max_length=100)
@@ -16,3 +19,6 @@ class Category(MPTTModel):
         'self', null=True, related_name='children', db_index=True)
     channel = models.ForeignKey('category.Channel', on_delete=models.CASCADE)
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    def __str__(self):
+        return self.name
