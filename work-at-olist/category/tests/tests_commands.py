@@ -64,3 +64,17 @@ class ImportCategories(TestCase):
             stdout=self.out)
         self.assertEquals(
             3, Category.objects.count())
+
+    def test_full_update_on_import(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/correct.csv',
+            stdout=self.out)
+        channel = Channel.objects.get(name='supermarket')
+        self.assertEquals(
+            23, Category.objects.filter(channel=channel).count())
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/simple.csv',
+            stdout=self.out)
+        channel = Channel.objects.get(name='supermarket')
+        self.assertEquals(
+            3, Category.objects.filter(channel=channel).count())

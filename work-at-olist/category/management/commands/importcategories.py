@@ -29,13 +29,17 @@ class Command(BaseCommand):
                 self.style.WARNING('csv file doesn\'t exist.'))
             return
 
-        with open(options['csv_file'][0], newline='') as csvfile:
-            rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
-            categories = [row['category'] for row in rows]
+        with transaction.atomic():
+            Category.objects.filter(channel=channel).delete()
 
-            for category in categories:
-                category_name = category.split(' / ')[-1]
-                Category.objects.create(name=category_name, channel=channel)
-                self.stdout.write(self.style.SUCCESS(category_name))
+            with open(options['csv_file'][0], newline='') as csvfile:
+                rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
+                categories = [row['category'] for row in rows]
+
+                for category in categories:
+                    category_name = category.split(' / ')[-1]
+                    Category.objects.create(
+                        name=category_name, channel=channel)
+                    self.stdout.write(self.style.SUCCESS(category_name))
 
         self.stdout.write(self.style.SUCCESS('Categories imported.'))
