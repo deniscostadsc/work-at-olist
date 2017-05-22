@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # local apps
-    'category',
+    'category.apps.CategoryConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
