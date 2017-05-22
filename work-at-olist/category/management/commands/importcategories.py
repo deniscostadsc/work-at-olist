@@ -34,12 +34,19 @@ class Command(BaseCommand):
 
             with open(options['csv_file'][0], newline='') as csvfile:
                 rows = csv.DictReader(csvfile, delimiter=',', quotechar='"')
-                categories = [row['category'] for row in rows]
+                categories_path = [row['category'] for row in rows]
+                categories_path.sort()
 
-                for category in categories:
-                    category_name = category.split(' / ')[-1]
-                    Category.objects.create(
-                        name=category_name, channel=channel)
+                category = None
+                for category_path in categories_path:
+                    category_path = category_path.split(' / ')
+
+                    if len(category_path) == 1:
+                        category = None
+
+                    category_name = category_path[-1]
+                    category = Category.objects.create(
+                        name=category_name, channel=channel, parent=category)
                     self.stdout.write(self.style.SUCCESS(category_name))
 
         self.stdout.write(self.style.SUCCESS('Categories imported.'))

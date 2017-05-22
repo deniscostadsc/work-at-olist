@@ -78,3 +78,36 @@ class ImportCategories(TestCase):
         channel = Channel.objects.get(name='supermarket')
         self.assertEquals(
             3, Category.objects.filter(channel=channel).count())
+
+    def test_import_correct_parents(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/simple.csv',
+            stdout=self.out)
+        books = Category.objects.get(name='Books')
+        national_literature = Category.objects.get(name='National Literature')
+        science_fiction = Category.objects.get(name='Science Fiction')
+        self.assertIsNone(books.parent)
+        self.assertEquals(books, national_literature.parent)
+        self.assertEquals(national_literature, science_fiction.parent)
+
+    def test_import_correct_parents_with_unordered_csv(self):
+        call_command(
+            'importcategories', 'supermarket',
+            '../tests/files/unordered_simple.csv', stdout=self.out)
+        books = Category.objects.get(name='Books')
+        national_literature = Category.objects.get(name='National Literature')
+        science_fiction = Category.objects.get(name='Science Fiction')
+        self.assertIsNone(books.parent)
+        self.assertEquals(books, national_literature.parent)
+        self.assertEquals(national_literature, science_fiction.parent)
+
+    def test_import_correct_parents_with_more_than_one_root_category(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/correct.csv',
+            stdout=self.out)
+        books = Category.objects.get(name='Books')
+        games = Category.objects.filter(name='Games').first()
+        computers = Category.objects.filter(name='Computers').last()
+        self.assertIsNone(books.parent)
+        self.assertIsNone(games.parent)
+        self.assertIsNone(computers.parent)
