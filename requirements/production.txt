@@ -2,6 +2,5 @@ Django==1.11.1
 dj-database-url==0.4.2
 django-mptt==0.8.7
 djangorestframework==3.6.3
-prettyconf==1.2.3
 psycopg2==2.7.1
 python-decouple==3.0
