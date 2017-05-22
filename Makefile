@@ -16,3 +16,15 @@ makemigrations:
 
 coverage:
 	cd work-at-olist; coverage report -m
+
+create-vm:
+	vagrant  up
+	vagrant snapshot save right-after-provision
+
+destroy-vm:
+	vagrant destroy -f
+
+recreate-vm: destroy-vm create-vm
+
+reset-vm:
+	vagrant snapshot restore right-after-provision
