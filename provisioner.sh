@@ -11,6 +11,13 @@ sudo apt install -y \
 sudo apt autoremove
 sudo apt autoclean
 
+sudo -u postgres psql << EOC
+    CREATE USER olist WITH PASSWORD 'olist';
+    CREATE DATABASE olist;
+    GRANT ALL PRIVILEGES ON DATABASE "olist" to olist;
+    ALTER USER olist CREATEDB;
+EOC
+
 sudo -H pip install -U pip
 sudo -H pip install virtualenv
 
