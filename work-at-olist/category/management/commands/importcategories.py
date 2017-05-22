@@ -2,8 +2,8 @@ import csv
 import os
 
 from django.core.management.base import BaseCommand
-from django.db.utils import IntegrityError
 from django.db import transaction
+from django.db.utils import IntegrityError
 
 from category.models import Channel, Category
 

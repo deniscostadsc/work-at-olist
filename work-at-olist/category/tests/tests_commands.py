@@ -1,6 +1,6 @@
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
-from django.core.management import call_command
 
 from category.models import Channel, Category
 
