@@ -26,8 +26,7 @@ class Command(BaseCommand):
             channel = Channel.objects.get(name=channel_name)
 
         if not os.path.exists(csv_file):
-            self.stdout.write(
-                self.style.WARNING('csv file doesn\'t exist.'))
+            self.stdout.write(self.style.ERROR('csv file doesn\'t exist.'))
             return
 
         with transaction.atomic():
