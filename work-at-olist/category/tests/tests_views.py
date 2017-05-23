@@ -54,7 +54,7 @@ class TestChannelAPIView(TestCase):
         category = Category.objects.get(name='National Literature')
         response = self.client.get(
             reverse('category_detail', kwargs={'uid': category.uid}))
-        self.assertIn('National Literature', response.content.decode())
+        self.assertIn(category.name, response.content.decode())
         self.assertIn('"ancestors":["Books"]', response.content.decode())
         self.assertIn(
             '"children":["Science Fiction"]', response.content.decode())
