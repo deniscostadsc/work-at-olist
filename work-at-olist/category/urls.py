@@ -1,12 +1,13 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 
-from rest_framework import routers
+from .views import CategoryDetailView, ChannelListView, ChannelDetailView
 
-from .views import ChannelViewSet
-
-router = routers.DefaultRouter()
-router.register(r'channels', ChannelViewSet)
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
+    url(r'^channel$', ChannelListView.as_view(), name='channels'),
+    url(
+        r'^channel/(?P<uid>[-\w]+)$',
+        ChannelDetailView.as_view(), name='channel_detail'),
+    url(r'^category/(?P<uid>[-\w]+)$',
+        CategoryDetailView.as_view(), name='category_detail'),
 ]

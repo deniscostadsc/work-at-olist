@@ -16,7 +16,7 @@ class Channel(models.Model):
 class Category(MPTTModel):
     name = models.CharField(max_length=100)
     parent = TreeForeignKey(
-        'self', null=True, related_name='children', db_index=True)
+        'self', null=True, related_name='category', db_index=True)
     channel = models.ForeignKey('category.Channel', on_delete=models.CASCADE)
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
 
