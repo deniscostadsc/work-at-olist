@@ -1,2 +1,3 @@
 -r production.txt
+whitenoise==3.3.0
 gunicorn
