@@ -1,4 +1,5 @@
 Django==1.11.1
+coreapi==2.3.0
 dj-database-url==0.4.2
 django-mptt==0.8.7
 djangorestframework==3.6.3
