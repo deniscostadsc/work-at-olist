@@ -17,4 +17,23 @@ If you want to use Vagrant you need to have installed:
 - VirtualBox
 - Vagrant
 
-Create a .env file base on local.env.
+To setup variables, need to create a .env file. You can do it based on
+local.env.
+
+To create the VM, run:
+
+```
+make create-vm
+```
+
+To run lint check, test and coverage report  just run:
+
+```
+make build
+```
+
+And to run the project just run:
+
+```
+make runserver
+```
