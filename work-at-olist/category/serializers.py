@@ -4,12 +4,16 @@ from .models import Category, Channel
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    channel = serializers.SerializerMethodField()
     ancestors = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ('name', 'uid', 'ancestors', 'children')
+        fields = ('name', 'uid', 'channel', 'ancestors', 'children')
+
+    def get_channel(self, obj):
+        return obj.channel.name
 
     def get_ancestors(self, obj):
         return [category.name
