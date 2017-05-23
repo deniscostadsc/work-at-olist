@@ -39,6 +39,14 @@ class TestChannelAPIView(TestCase):
         self.assertIn(supermarket.name, response.content.decode())
         self.assertIn('Books', response.content.decode())
 
+    def test_list_view(self):
+        call_command(
+            'importcategories', 'supermarket', '../tests/files/simple.csv',
+            stdout=self.out)
+        category = Category.objects.get(name='National Literature')
+        response = self.client.get(reverse('categories'))
+        self.assertIn(category.name, response.content.decode())
+
     def test_detail_category(self):
         call_command(
             'importcategories', 'supermarket', '../tests/files/simple.csv',

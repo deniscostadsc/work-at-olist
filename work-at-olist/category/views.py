@@ -25,6 +25,16 @@ class ChannelDetailView(views.APIView):
         return Channel.objects.all()
 
 
+class CategoryListView(views.APIView):
+    def get(self, request, format=None):
+        serializer = CategorySerializer(
+            self.get_queryset(), many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        return Category.objects.all()
+
+
 class CategoryDetailView(views.APIView):
     def get(self, request, *args, **kwargs):
         get_object_or_404(self.get_queryset(), uid=kwargs['uid'])
