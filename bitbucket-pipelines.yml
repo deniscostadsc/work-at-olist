@@ -11,7 +11,8 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - pip install -r requirements-local.txt
           - make lint
-          - make test && make coverage
+          - make test
+          - make coverage
 
 definitions:
   services:
