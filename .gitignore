@@ -8,4 +8,5 @@
 .env
 .vagrant
 .coverage
+staticfiles/
 tmp
