@@ -2,6 +2,6 @@ Django==1.11.28
 coreapi==2.3.0
 dj-database-url==0.4.2
 django-mptt==0.8.7
-djangorestframework==3.6.3
+djangorestframework==3.9.1
 psycopg2==2.7.1
 python-decouple==3.0
